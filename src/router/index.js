@@ -3,13 +3,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path:  '',
-    name:  '',
-    component: ''
-  },
-]
+const routes = []
 
 const router = new VueRouter({
   routes

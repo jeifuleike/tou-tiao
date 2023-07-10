@@ -1,6 +1,6 @@
 <template>
     <div>
-        <van-nav-bar title="登录" />
+        <van-nav-bar left-text="返回" title="登录"  @click-left="$router.back()"/>
         <van-form ref="loginFrom" @submit="onSubmit">
             <van-field name="mobile" v-model="user.mobile" placeholder="请输入手机号" :rules="userFromRules.mobile">
                 <i slot="left-icon" class="toutiao icon-shouji"></i>
@@ -61,18 +61,17 @@ export default {
     methods: {
         async onSubmit() {
             const user = this.user
-            this.$toast.loading({ message: '加载中...', forbidClick: true })
+            this.$toast.loading({ message: '登录中...', forbidClick: true })
             try {
                 const res = await loginAPI(user)
-                console.log('登录成功', res)
                 this.$store.commit('SetUser',res.data.data)
                 this.$toast.success('登录成功')
+                this.$store.dispatch("fetchUserInfo")
+                this.$router.push({ path: "/my" });
             } catch (err) {
                 if (err.response.status === 400) {
-                    console.log('手机号或者验证码错误')
                     this.$toast.fail('登录失败，手机号或者验证码错误')
                 } else {
-                    console.log('登录失败，请稍后再试')
                     this.$toast.fail('登录失败，请稍后再试')
                 }
             }
@@ -84,15 +83,12 @@ export default {
             try {
                 await this.$refs.loginFrom.validate('mobile')
             } catch (err) {
-                return console.log(err)
             }
             try{
                 const res = await codesAPI(this.user.mobile)
                 this.isShow = false
-                console.log(res)
                 this.$notify({ type: 'success', message: '发送验证码成功' })
             } catch (err){
-                console.log(err)
                 this.isShow = true
                 if(err.response.status === 429){
                     this.$notify({ type: 'danger', message: '验证码发送过于频繁，请稍后重试' })
@@ -111,6 +107,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.van-nav-bar__left{
+    color: #fff;
+}
 .toutiao {
     font-size: 37px;
 }

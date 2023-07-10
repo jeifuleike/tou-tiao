@@ -15,6 +15,8 @@ module.exports = {
         //配置要转化的css属性(要改什么属性就写什么属性，列：['height'])
         //*表示所有
         propList: ['*'],
+        //配置不要转化的样式资源
+        exclude: 'github-markdown.css'
       },
     },
   };
